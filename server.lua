@@ -1,11 +1,23 @@
+
+if Config.Framework == "QB" then
 local QBCore = exports['qb-core']:GetCoreObject()
+elseif Config.Framework == "ESX" then
+local ESX = exports['qb-core']:GetCoreObject()
+end
 
 lib.callback.register('qb-vehicleshop:server:GetMyVehicles', function(source) 
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if not Player then return false end
-    local MyVeh = MySQL.query.await('SELECT * FROM player_vehicles WHERE citizenid = ?', {Player.PlayerData.citizenid})
-    if MyVeh[1] then return MyVeh else return false end   
+    if Config.Framework == "QB" then 
+        local Player = QBCore.Functions.GetPlayer(src)
+        if not Player then return false end
+        local MyVeh = MySQL.query.await('SELECT * FROM player_vehicles WHERE citizenid = ?', {Player.PlayerData.citizenid})
+        if MyVeh[1] then return MyVeh else return false end   
+    elseif Config.Framework == "ESX" then
+        local xPlayer = ESX.GetPlayerFromId(src)
+        if not xPlayer then return false end
+        local MyVeh = MySQL.query.await('SELECT * FROM users WHERE identifier = ?', {xPlayer.getIdentifier()})
+        if MyVeh[1] then return MyVeh else return false end   
+    end
 end)
 
 lib.callback.register('qb-vehicleshop:server:GetPlayerInfo', function(source, tsrc) 
