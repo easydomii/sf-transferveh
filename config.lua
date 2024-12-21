@@ -1,5 +1,8 @@
 Config = Config or {}
 
+Config.Framework = "ESX"
+Config.JGMechanics = true
+
 Config.Command = 'transferveh'      -- command
 Config.Payment = 'cash'             -- cash / bank
 Config.EnableTransferSelf = false   -- enable only if you want test transfer vehicle with your self
